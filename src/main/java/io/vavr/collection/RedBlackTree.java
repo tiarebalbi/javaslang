@@ -4,7 +4,7 @@
  *
  * The MIT License (MIT)
  *
- * Copyright 2023 Vavr, https://vavr.io
+ * Copyright 2025 Vavr, https://vavr.io
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -50,7 +50,9 @@ import static io.vavr.collection.RedBlackTree.Color.RED;
  *
  * @param <T> Component type
  */
-interface RedBlackTree<T> extends Iterable<T> {
+interface RedBlackTree<T> extends Iterable<T>, Serializable {
+
+    long serialVersionUID = 1L;
 
     static <T> RedBlackTree<T> empty(Comparator<? super T> comparator) {
         Objects.requireNonNull(comparator, "comparator is null");
@@ -351,6 +353,7 @@ interface RedBlackTreeModule {
         final Color color;
         final int blackHeight;
         final RedBlackTree<T> left;
+        @SuppressWarnings("serial")
         final T value;
         final RedBlackTree<T> right;
         final Empty<T> empty;
@@ -828,6 +831,7 @@ interface RedBlackTreeModule {
 
         private static final long serialVersionUID = 1L;
 
+        @SuppressWarnings("serial") // Conditionally serializable
         final Comparator<T> comparator;
 
         // This is no public API! The RedBlackTree takes care of passing the correct Comparator.

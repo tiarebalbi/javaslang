@@ -4,7 +4,7 @@
  *
  * The MIT License (MIT)
  *
- * Copyright 2023 Vavr, https://vavr.io
+ * Copyright 2025 Vavr, https://vavr.io
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -65,6 +65,7 @@ final class BitMappedTrie<T> implements Serializable {
     static <T> BitMappedTrie<T> empty() { return (BitMappedTrie<T>) EMPTY; }
 
     final ArrayType<T> type;
+    @SuppressWarnings("serial") // Conditionally serializable
     private final Object array;
     private final int offset, length;
     private final int depthShift;

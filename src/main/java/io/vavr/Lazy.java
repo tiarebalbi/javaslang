@@ -4,7 +4,7 @@
  *
  * The MIT License (MIT)
  *
- * Copyright 2023 Vavr, https://vavr.io
+ * Copyright 2025 Vavr, https://vavr.io
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -37,6 +37,7 @@ import java.io.Serializable;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 import java.util.Objects;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -69,6 +70,7 @@ import java.util.function.Supplier;
 public final class Lazy<T> implements Value<T>, Supplier<T>, Serializable {
 
     private static final long serialVersionUID = 1L;
+    private final ReentrantLock lock = new ReentrantLock();
 
     // read http://javarevisited.blogspot.de/2014/05/double-checked-locking-on-singleton-in-java.html
     private transient volatile Supplier<? extends T> supplier;
@@ -169,11 +171,16 @@ public final class Lazy<T> implements Value<T>, Supplier<T>, Serializable {
         return (supplier == null) ? value : computeValue();
     }
     
-    private synchronized T computeValue() {
-        final Supplier<? extends T> s = supplier;
-        if (s != null) {
-            value = s.get();
-            supplier = null;
+    private T computeValue() {
+        lock.lock();
+        try {
+            final Supplier<? extends T> s = supplier;
+            if (s != null) {
+                value = s.get();
+                supplier = null;
+            }
+        } finally {
+            lock.unlock();
         }
         return value;
     }

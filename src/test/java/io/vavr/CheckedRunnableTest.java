@@ -4,7 +4,7 @@
  *
  * The MIT License (MIT)
  *
- * Copyright 2023 Vavr, https://vavr.io
+ * Copyright 2025 Vavr, https://vavr.io
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,8 +26,8 @@
  */
 package io.vavr;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -58,18 +58,13 @@ public class CheckedRunnableTest {
         try {
             runnable.run();
         } catch(Throwable x) {
-            Assert.fail("Did not expect an exception but received: " + x.getMessage());
+            Assertions.fail("Did not expect an exception but received: " + x.getMessage());
         }
     }
 
     @Test
     public void shouldApplyAnUncheckedFunctionThatThrows() {
         final Runnable runnable = CheckedRunnable.of(() -> { throw new Error(); }).unchecked();
-        try {
-            runnable.run();
-            Assert.fail("Did expect an exception.");
-        } catch(Error x) {
-            // ok!
-        }
+        Assertions.assertThrows(Error.class, () -> runnable.run());
     }
 }

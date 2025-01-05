@@ -4,7 +4,7 @@
  *
  * The MIT License (MIT)
  *
- * Copyright 2023 Vavr, https://vavr.io
+ * Copyright 2025 Vavr, https://vavr.io
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,7 +30,9 @@ import io.vavr.AbstractValueTest;
 import io.vavr.collection.List;
 import io.vavr.collection.Seq;
 import io.vavr.collection.Vector;
-import org.junit.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 
 import java.util.NoSuchElementException;
 import java.util.Objects;
@@ -40,6 +42,7 @@ import java.util.function.Function;
 import static io.vavr.API.Left;
 import static io.vavr.API.Right;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SuppressWarnings("deprecation")
 public class EitherTest extends AbstractValueTest {
@@ -198,9 +201,9 @@ public class EitherTest extends AbstractValueTest {
 
     // -- transform
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void shouldThrowExceptionOnNullTransformFunction() {
-        Either.right(1).transform(null);
+        assertThrows(NullPointerException.class, () -> Either.right(1).transform(null));
     }
 
     @Test
@@ -307,14 +310,14 @@ public class EitherTest extends AbstractValueTest {
         assertThat(actual.map(v -> { throw new IllegalStateException(); })).isSameAs(actual);
     }
 
-    @Test(expected = NoSuchElementException.class)
+    @Test
     public void shouldThrowIfRightGetLeft() {
-        Right(1).getLeft();
+        assertThrows(NoSuchElementException.class, () -> Right(1).getLeft());
     }
 
-    @Test(expected = NoSuchElementException.class)
+    @Test
     public void shouldThrowIfLeftGet() {
-        Left(1).get();
+        assertThrows(NoSuchElementException.class, () -> Left(1).get());
     }
 
     @Test
@@ -481,9 +484,33 @@ public class EitherTest extends AbstractValueTest {
     @Test
     public void shouldPeekLeftForLeft() {
         final int[] effect = { 0 };
-        final Either<Integer, ?> actual = Either.left(1).peekLeft(i -> effect[0] = i);
+        final Either<Integer, ?> actual = Either.left(1)
+                .peekLeft(i -> effect[0] = i);
         assertThat(actual).isEqualTo(Either.left(1));
         assertThat(effect[0]).isEqualTo(1);
+    }
+
+
+    @Nested
+    @DisplayName("peek(Runnable, Consumer)")
+    class PeekRunnableConsumer {
+        @Test
+        void shouldConsumePresentValueOnPeekWhenValueIsDefined() {
+            final int[] actual = new int[] { -1 };
+            final Either<Integer, ?> testee = Either.left(1)
+                    .peek(i -> actual[0] = 1, i -> actual[0] = 2);
+            assertThat(testee).isEqualTo(Either.left(1));
+            assertThat(actual[0]).isEqualTo(1);
+        }
+
+        @Test
+        void shouldRunRunnableWhenValueIsNotDefined() {
+            final int[] actual = new int[] { -1 };
+            final Either<?, Integer> testee = Either.right(1)
+                    .peek(i -> actual[0] = 1, i -> actual[0] = 2);
+            assertThat(testee).isEqualTo(Either.right(1));
+            assertThat(actual[0]).isEqualTo(2);
+        }
     }
 
     @Test

@@ -4,7 +4,7 @@
  *
  * The MIT License (MIT)
  *
- * Copyright 2023 Vavr, https://vavr.io
+ * Copyright 2025 Vavr, https://vavr.io
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -32,13 +32,16 @@ package io.vavr;
 
 import io.vavr.collection.Seq;
 import io.vavr.collection.Stream;
+import java.io.Serializable;
 import java.util.Map;
 import java.util.Objects;
 
 /**
  * The base interface of all tuples.
  */
-public interface Tuple {
+public interface Tuple extends Serializable {
+
+    long serialVersionUID = 1L;
 
     /**
      * The maximum arity of an Tuple.

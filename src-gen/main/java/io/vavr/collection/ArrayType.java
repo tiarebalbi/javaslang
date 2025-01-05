@@ -4,7 +4,7 @@
  *
  * The MIT License (MIT)
  *
- * Copyright 2023 Vavr, https://vavr.io
+ * Copyright 2025 Vavr, https://vavr.io
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -37,7 +37,10 @@ import java.util.Collection;
 /**
  * Helper to replace reflective array access.
  */
-interface ArrayType<T> {
+interface ArrayType<T> extends Serializable {
+
+    long serialVersionUID = 1L;
+
     @SuppressWarnings("unchecked")
     static <T> ArrayType<T> obj() { return (ArrayType<T>) ObjectArrayType.INSTANCE; }
 

@@ -4,7 +4,7 @@
  *
  * The MIT License (MIT)
  *
- * Copyright 2023 Vavr, https://vavr.io
+ * Copyright 2025 Vavr, https://vavr.io
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -1533,6 +1533,7 @@ public final class TreeMap<K, V> implements SortedMap<K, V>, Serializable {
 
             private static final long serialVersionUID = 1L;
 
+            @SuppressWarnings("serial") // Conditionally serializable
             private final Comparator<K> keyComparator;
 
             @SuppressWarnings("unchecked")

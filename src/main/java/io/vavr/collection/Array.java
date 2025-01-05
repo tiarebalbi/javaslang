@@ -4,7 +4,7 @@
  *
  * The MIT License (MIT)
  *
- * Copyright 2023 Vavr, https://vavr.io
+ * Copyright 2025 Vavr, https://vavr.io
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -51,6 +51,7 @@ public final class Array<T> implements IndexedSeq<T>, Serializable {
 
     private static final Array<?> EMPTY = new Array<>(new Object[0]);
 
+    @SuppressWarnings("serial") // Conditionally serializable
     private final Object[] delegate;
 
     private Array(Object[] delegate) {
@@ -683,7 +684,7 @@ public final class Array<T> implements IndexedSeq<T>, Serializable {
         if (source.length == 0) {
             return this;
         } else {
-            final Object[] arr = copyOf(delegate, delegate.length + source.length);
+            final Object[] arr = copyOf(delegate, delegate.length + source.length, Object[].class);
             System.arraycopy(source, 0, arr, delegate.length, source.length);
             return wrap(arr);
         }
